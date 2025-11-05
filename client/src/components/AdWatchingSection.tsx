@@ -35,11 +35,11 @@ export default function AdWatchingSection({ user }: AdWatchingSectionProps) {
       // Set last ad watch time to enforce 30-second cooldown
       setLastAdWatchTime(Date.now());
       
-      // Calculate PAD amount from response (convert TON to PAD)
-      const padAmount = Math.round(parseFloat(data.earning?.amount || '0.00030000') * 100000);
+      // Calculate MGB amount from response (convert TON to MGB)
+      const mgbAmount = Math.round(parseFloat(data.earning?.amount || '0.00030000') * 10000000);
       
       // Show reward notification with dynamic amount
-      showNotification(`You received ${padAmount} PAD on your balance`, "success");
+      showNotification(`You received ${mgbAmount.toLocaleString()} MGB on your balance`, "success");
       
       // Start countdown AFTER reward is received (4 seconds)
       setCooldownRemaining(4);
@@ -117,7 +117,7 @@ export default function AdWatchingSection({ user }: AdWatchingSectionProps) {
       <CardContent className="p-3">
         <div className="text-center mb-2">
           <h2 className="text-base font-bold text-foreground mb-1">Viewing ads</h2>
-          <p className="text-muted-foreground text-xs">Get PAD for watching commercials</p>
+          <p className="text-muted-foreground text-xs">Get MGB for watching commercials</p>
         </div>
         
         <div className="flex justify-center mb-2">
