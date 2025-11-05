@@ -13,7 +13,7 @@ import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { formatCurrency } from "@/lib/utils";
-import { PAD_TO_TON } from "@shared/constants";
+import { MGB_TO_TON } from "@shared/constants";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Crown } from "lucide-react";
 
@@ -160,7 +160,7 @@ export default function AdminPage() {
           <div className="grid grid-cols-1 gap-3">
             <StatCard
               icon="gem"
-              label="Total PAD"
+              label="Total MGB"
               value={formatCurrency(stats?.totalEarnings || '0')}
               iconColor="text-cyan-600"
               bgColor="bg-cyan-50"
@@ -203,14 +203,10 @@ export default function AdminPage() {
 
         {/* Tabs Navigation */}
         <Tabs defaultValue="analytics" className="w-full">
-          <TabsList className="grid grid-cols-5 w-full max-w-3xl mx-auto mb-6">
+          <TabsList className="grid grid-cols-4 w-full max-w-3xl mx-auto mb-6">
             <TabsTrigger value="analytics">
               <i className="fas fa-chart-line mr-2"></i>
               Analytics
-            </TabsTrigger>
-            <TabsTrigger value="users">
-              <i className="fas fa-users-cog mr-2"></i>
-              Users
             </TabsTrigger>
             <TabsTrigger value="promos">
               <i className="fas fa-gift mr-2"></i>
@@ -229,11 +225,6 @@ export default function AdminPage() {
           {/* Analytics Tab */}
           <TabsContent value="analytics" className="space-y-4">
             <AnalyticsSection stats={stats} />
-          </TabsContent>
-
-          {/* User Management Tab */}
-          <TabsContent value="users" className="space-y-4">
-            <UserManagementSection usersData={usersData} />
           </TabsContent>
 
           {/* Promo Creator Tab */}
@@ -351,7 +342,7 @@ function AnalyticsSection({ stats }: { stats: AdminStats | undefined }) {
                 dataKey="earnings" 
                 stroke="#10b981" 
                 strokeWidth={2}
-                name="📈 PAD Earned"
+                name="📈 MGB Earned"
                 dot={{ fill: '#10b981', r: 3 }}
                 activeDot={{ r: 5 }}
               />
@@ -469,7 +460,7 @@ function PromoCreatorSection() {
   const [formData, setFormData] = useState({
     code: '',
     rewardAmount: '',
-    rewardType: 'PAD' as 'PAD' | 'PDZ',
+    rewardType: 'TON' as 'TON',
     usageLimit: '',
     perUserLimit: '1',
     expiresAt: ''
@@ -511,8 +502,8 @@ function PromoCreatorSection() {
       return;
     }
 
-    // For PAD rewards, convert to TON; for PDZ, send as-is
-    const finalAmount = formData.rewardType === 'PAD' ? rewardAmount / PAD_TO_TON : rewardAmount;
+    // TON rewards are sent directly
+    const finalAmount = rewardAmount;
 
     setIsCreating(true);
     try {
@@ -535,7 +526,7 @@ function PromoCreatorSection() {
         setFormData({
           code: '',
           rewardAmount: '',
-          rewardType: 'PAD',
+          rewardType: 'TON',
           usageLimit: '',
           perUserLimit: '1',
           expiresAt: ''
@@ -611,36 +602,15 @@ function PromoCreatorSection() {
             </div>
           </div>
           <div>
-            <Label htmlFor="reward-type">Reward Type *</Label>
-            <div className="grid grid-cols-2 gap-2 mt-1">
-              <Button
-                type="button"
-                variant={formData.rewardType === 'PAD' ? 'default' : 'outline'}
-                onClick={() => setFormData({ ...formData, rewardType: 'PAD' })}
-                className="w-full"
-              >
-                PAD
-              </Button>
-              <Button
-                type="button"
-                variant={formData.rewardType === 'PDZ' ? 'default' : 'outline'}
-                onClick={() => setFormData({ ...formData, rewardType: 'PDZ' })}
-                className="w-full"
-              >
-                PDZ
-              </Button>
-            </div>
-          </div>
-          <div>
-            <Label htmlFor="reward-amount">Reward Amount ({formData.rewardType}) *</Label>
+            <Label htmlFor="reward-amount">Reward Amount (TON) *</Label>
             <Input
               id="reward-amount"
               type="number"
-              placeholder={`Enter exact ${formData.rewardType} amount`}
+              placeholder="Enter TON amount (e.g., 0.5)"
               value={formData.rewardAmount}
               onChange={(e) => setFormData({ ...formData, rewardAmount: e.target.value })}
               min="0"
-              step="1"
+              step="0.01"
             />
             <p className="text-xs text-muted-foreground mt-1">
               Value will be exactly {formData.rewardAmount || '0'} {formData.rewardType} per user
@@ -716,7 +686,7 @@ function PromoCreatorSection() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge variant="outline" className="text-xs">
-                          {promo.rewardType || 'PAD'}
+                          {promo.rewardType || 'TON'}
                         </Badge>
                         <Badge className={status.color}>{status.label}</Badge>
                       </div>
@@ -725,10 +695,7 @@ function PromoCreatorSection() {
                       <div>
                         <span className="text-muted-foreground">Reward:</span>
                         <span className="font-semibold ml-1">
-                          {promo.rewardType === 'PDZ' 
-                            ? `${parseFloat(promo.rewardAmount).toFixed(2)} PDZ`
-                            : `${Math.round(parseFloat(promo.rewardAmount) * 100000)} PAD`
-                          }
+                          {parseFloat(promo.rewardAmount).toFixed(4)} TON
                         </span>
                       </div>
                       <div>
@@ -746,10 +713,7 @@ function PromoCreatorSection() {
                       <div>
                         <span className="text-muted-foreground">Distributed:</span>
                         <span className="font-semibold ml-1">
-                          {promo.rewardType === 'PDZ'
-                            ? `${parseFloat(promo.totalDistributed).toFixed(2)} PDZ`
-                            : `${Math.round(parseFloat(promo.totalDistributed) * 100000)} PAD`
-                          }
+                          {parseFloat(promo.totalDistributed).toFixed(4)} TON
                         </span>
                       </div>
                     </div>
@@ -899,12 +863,9 @@ function SettingsSection() {
     dailyAdLimit: '50',
     rewardPerAd: '1000',
     affiliateCommission: '10',
-    walletChangeFee: '0.01',
     minimumWithdrawal: '0.5',
     taskPerClickReward: '0.0001750',
-    taskCreationCost: '0.0003',
-    minimumConvert: '0.01',
-    seasonBroadcastActive: false
+    taskCreationCost: '0.0003'
   });
   
   // Update form when settings data loads
@@ -914,12 +875,9 @@ function SettingsSection() {
         dailyAdLimit: settingsData.dailyAdLimit?.toString() || '50',
         rewardPerAd: settingsData.rewardPerAd?.toString() || '1000',
         affiliateCommission: settingsData.affiliateCommission?.toString() || '10',
-        walletChangeFee: settingsData.walletChangeFee?.toString() || '0.01',
         minimumWithdrawal: settingsData.minimumWithdrawal?.toString() || '0.5',
         taskPerClickReward: settingsData.taskPerClickReward?.toString() || '0.0001750',
-        taskCreationCost: settingsData.taskCreationCost?.toString() || '0.0003',
-        minimumConvert: settingsData.minimumConvert?.toString() || '0.01',
-        seasonBroadcastActive: settingsData.seasonBroadcastActive || false
+        taskCreationCost: settingsData.taskCreationCost?.toString() || '0.0003'
       });
     }
   }, [settingsData]);
@@ -928,11 +886,9 @@ function SettingsSection() {
     const adLimit = parseInt(settings.dailyAdLimit);
     const reward = parseInt(settings.rewardPerAd);
     const affiliate = parseFloat(settings.affiliateCommission);
-    const walletFee = parseFloat(settings.walletChangeFee);
     const minWithdrawal = parseFloat(settings.minimumWithdrawal);
     const taskReward = parseFloat(settings.taskPerClickReward);
     const taskCost = parseFloat(settings.taskCreationCost);
-    const minConvert = parseFloat(settings.minimumConvert);
     
     if (isNaN(adLimit) || adLimit <= 0) {
       toast({
@@ -958,12 +914,9 @@ function SettingsSection() {
         dailyAdLimit: adLimit,
         rewardPerAd: reward,
         affiliateCommission: affiliate,
-        walletChangeFee: walletFee,
         minimumWithdrawal: minWithdrawal,
         taskPerClickReward: taskReward,
-        taskCreationCost: taskCost,
-        minimumConvert: minConvert,
-        seasonBroadcastActive: settings.seasonBroadcastActive
+        taskCreationCost: taskCost
       });
       
       const result = await response.json();
@@ -1040,10 +993,10 @@ function SettingsSection() {
           <div className="space-y-2">
             <Label htmlFor="reward-per-ad" className="text-base font-semibold">
               <i className="fas fa-gem mr-2 text-purple-600"></i>
-              Reward Per Ad (PAD)
+              Reward Per Ad (MGB)
             </Label>
             <p className="text-xs text-muted-foreground mb-2">
-              Amount of PAD tokens awarded for watching one ad
+              Amount of MGB tokens awarded for watching one ad
             </p>
             <Input
               id="reward-per-ad"
@@ -1055,7 +1008,7 @@ function SettingsSection() {
               className="text-lg font-semibold"
             />
             <p className="text-xs text-muted-foreground">
-              Current: {settingsData?.rewardPerAd || 1000} PAD per ad
+              Current: {settingsData?.rewardPerAd || 1000} MGB per ad
             </p>
           </div>
 
@@ -1081,30 +1034,6 @@ function SettingsSection() {
             />
             <p className="text-xs text-muted-foreground">
               Current: {settingsData?.affiliateCommission || 10}%
-            </p>
-          </div>
-
-          {/* Wallet Change Fee Setting */}
-          <div className="space-y-2">
-            <Label htmlFor="wallet-change-fee" className="text-base font-semibold">
-              <i className="fas fa-exchange-alt mr-2 text-yellow-600"></i>
-              Wallet Change Fee (PAD)
-            </Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Fee charged when users change wallet address
-            </p>
-            <Input
-              id="wallet-change-fee"
-              type="number"
-              value={settings.walletChangeFee}
-              onChange={(e) => setSettings({ ...settings, walletChangeFee: e.target.value })}
-              placeholder="5000"
-              min="0"
-              step="1"
-              className="text-lg font-semibold"
-            />
-            <p className="text-xs text-muted-foreground">
-              Current: {settingsData?.walletChangeFee || 5000} PAD
             </p>
           </div>
 
@@ -1136,7 +1065,7 @@ function SettingsSection() {
           <div className="space-y-2">
             <Label htmlFor="task-per-click-reward" className="text-base font-semibold">
               <i className="fas fa-mouse-pointer mr-2 text-purple-600"></i>
-              Task Per Click Reward (PAD)
+              Task Per Click Reward (MGB)
             </Label>
             <p className="text-xs text-muted-foreground mb-2">
               Reward per task completion
@@ -1152,7 +1081,7 @@ function SettingsSection() {
               className="text-lg font-semibold"
             />
             <p className="text-xs text-muted-foreground">
-              Current: {settingsData?.taskPerClickReward || 1750} PAD
+              Current: {settingsData?.taskPerClickReward || 1750} MGB
             </p>
           </div>
 
@@ -1178,59 +1107,6 @@ function SettingsSection() {
             <p className="text-xs text-muted-foreground">
               Current: {settingsData?.taskCreationCost || 0.0003} TON
             </p>
-          </div>
-
-          {/* Minimum Convert Amount Setting */}
-          <div className="space-y-2">
-            <Label htmlFor="minimum-convert" className="text-base font-semibold">
-              <i className="fas fa-repeat mr-2 text-indigo-600"></i>
-              Minimum Convert Amount (TON)
-            </Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Minimum amount to convert PAD to TON
-            </p>
-            <Input
-              id="minimum-convert"
-              type="number"
-              value={settings.minimumConvert}
-              onChange={(e) => setSettings({ ...settings, minimumConvert: e.target.value })}
-              placeholder="0.01"
-              min="0"
-              step="0.001"
-              className="text-lg font-semibold"
-            />
-            <p className="text-xs text-muted-foreground">
-              Current: {settingsData?.minimumConvert || 0.01} TON
-            </p>
-          </div>
-        </div>
-
-        {/* Season Broadcast Toggle */}
-        <div className="space-y-2 pt-4 border-t">
-          <Label className="text-base font-semibold flex items-center gap-2">
-            <i className="fas fa-broadcast-tower mr-2 text-cyan-600"></i>
-            Season Broadcast
-          </Label>
-          <p className="text-xs text-muted-foreground mb-2">
-            Enable or disable season broadcast messages
-          </p>
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setSettings({ ...settings, seasonBroadcastActive: !settings.seasonBroadcastActive })}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.seasonBroadcastActive ? 'bg-green-600' : 'bg-gray-300'
-              }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  settings.seasonBroadcastActive ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-            <span className="text-sm font-medium">
-              {settings.seasonBroadcastActive ? 'Active' : 'Inactive'}
-            </span>
           </div>
         </div>
         
