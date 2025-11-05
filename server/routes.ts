@@ -3847,7 +3847,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
           throw new Error('Insufficient balance for this withdrawal.');
         }
 
-        // ✅ No minimum withdrawal requirement
+        // Get minimum withdrawal setting from admin settings
+        const allSettings = await tx.select().from(adminSettings);
+        const getSetting = (key: string, defaultValue: string): string => {
+          const setting = allSettings.find(s => s.settingKey === key);
+          return setting?.settingValue || defaultValue;
+        };
+        const minimumWithdrawal = parseFloat(getSetting('minimum_withdrawal', '0.5'));
+        
+        // Validate minimum withdrawal amount
+        if (withdrawAmount < minimumWithdrawal) {
+          throw new Error(`Minimum withdrawal amount is ${minimumWithdrawal} TON`);
+        }
+
         // ✅ No withdrawal fees
 
         console.log(`📝 Creating withdrawal request for ${withdrawAmount} TON (balance NOT deducted yet)`);
@@ -4718,36 +4730,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await storage.usePromoCode(code.trim().toUpperCase(), userId);
       
       if (result.success) {
-        // Add reward based on type
-        const rewardType = promoCode.rewardType || 'PAD';
+        // All promo codes reward TON directly (no PDZ or MGB)
         const rewardAmount = result.reward;
         
-        if (rewardType === 'PDZ') {
-          // Add PDZ balance
-          await storage.addPDZBalance(userId, rewardAmount, 'promo_code', `Redeemed promo code: ${code}`);
-          
-          res.json({ 
-            success: true, 
-            message: `${rewardAmount} PDZ added to your balance!`,
-            reward: rewardAmount,
-            rewardType: 'PDZ'
-          });
-        } else {
-          // Add PAD balance (adds to balance field which is in TON)
-          await storage.addEarning({
-            userId,
-            amount: rewardAmount,
-            source: 'promo_code',
-            description: `Promo code reward: ${code}`,
-          });
-          
-          res.json({ 
-            success: true, 
-            message: `${rewardAmount} TON added to your balance!`,
-            reward: rewardAmount,
-            rewardType: 'PAD'
-          });
-        }
+        // Add TON balance (adds to balance field which is in TON)
+        await storage.addEarning({
+          userId,
+          amount: rewardAmount,
+          source: 'promo_code',
+          description: `Promo code reward: ${code}`,
+        });
+        
+        res.json({ 
+          success: true, 
+          message: `${rewardAmount} TON added to your balance!`,
+          reward: rewardAmount,
+          rewardType: 'TON'
+        });
       } else {
         res.status(400).json({ 
           success: false, 
