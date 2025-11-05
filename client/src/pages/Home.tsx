@@ -40,6 +40,11 @@ export default function Home() {
     retry: false,
   });
 
+  const { data: appSettings } = useQuery<{ dailyAdLimit: number }>({
+    queryKey: ['/api/app-settings'],
+    retry: false,
+  });
+
 
 
   if (isLoading) {
@@ -140,7 +145,7 @@ export default function Home() {
               <div className="flex items-center gap-1.5">
                 <span className="text-gray-400">Ads</span>
                 <span className="font-semibold text-white">
-                  {tasksData?.adsWatchedToday ?? 0}
+                  {tasksData?.adsWatchedToday ?? 0}/{appSettings?.dailyAdLimit ?? 50}
                 </span>
               </div>
             </div>

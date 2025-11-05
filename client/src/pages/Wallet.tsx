@@ -36,8 +36,6 @@ interface User {
 
 interface WalletDetails {
   tonWalletAddress: string;
-  tonWalletComment: string;
-  telegramUsername: string;
   walletUpdatedAt?: string;
   canWithdraw: boolean;
 }
@@ -51,8 +49,6 @@ interface WithdrawForm {
 
 interface WalletForm {
   tonWalletAddress: string;
-  tonWalletComment: string;
-  telegramUsername: string;
 }
 
 export default function Wallet() {
@@ -64,12 +60,16 @@ export default function Wallet() {
   const queryClient = useQueryClient();
   const { isAdmin } = useAdmin();
   const [activeTab, setActiveTab] = useState('withdraw');
+
+  // Fetch app settings for minimum withdrawal
+  const { data: appSettings } = useQuery<{ minimumWithdrawal: number }>({
+    queryKey: ['/api/app-settings'],
+    retry: false,
+  });
   
   // Wallet details form
   const [walletForm, setWalletForm] = useState<WalletForm>({
-    tonWalletAddress: '',
-    tonWalletComment: '',
-    telegramUsername: ''
+    tonWalletAddress: ''
   });
   
   // Withdraw form
@@ -104,9 +104,7 @@ export default function Wallet() {
   useEffect(() => {
     if (walletDetails) {
       setWalletForm({
-        tonWalletAddress: walletDetails.tonWalletAddress || '',
-        tonWalletComment: walletDetails.tonWalletComment || '',
-        telegramUsername: walletDetails.telegramUsername || ''
+        tonWalletAddress: walletDetails.tonWalletAddress || ''
       });
     }
   }, [walletDetails]);
@@ -117,7 +115,7 @@ export default function Wallet() {
       setWithdrawForm(prev => ({
         ...prev,
         paymentDetails: walletDetails.tonWalletAddress || '',
-        comment: walletDetails.tonWalletComment || ''
+        comment: ''
       }));
     }
   }, [walletDetails]);
@@ -182,7 +180,8 @@ export default function Wallet() {
 
   const validateWithdrawForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-    const amountMGB = parseFloat(withdrawForm.amount);
+    const amountTON = parseFloat(withdrawForm.amount);
+    const minimumWithdrawal = appSettings?.minimumWithdrawal || 0.5;
 
     // Check for pending withdrawal
     if (hasPendingWithdrawal) {
@@ -190,9 +189,13 @@ export default function Wallet() {
       return false;
     }
 
-    if (!withdrawForm.amount || amountMGB <= 0) {
+    if (!withdrawForm.amount || amountTON <= 0) {
       newErrors.amount = 'Please enter a valid amount';
-    } else if (amountMGB > parseFloat(user?.balance || '0')) {
+    } else if (amountTON < minimumWithdrawal) {
+      newErrors.amount = `Minimum withdrawal is ${minimumWithdrawal} TON`;
+      showNotification(`Minimum withdrawal amount is ${minimumWithdrawal} TON`, "error");
+      return false;
+    } else if (amountTON > parseFloat(user?.balance || '0')) {
       newErrors.amount = 'Insufficient balance';
     }
 
@@ -221,7 +224,7 @@ export default function Wallet() {
         paymentSystem: 'mgb_wallet',
         amount: '',
         paymentDetails: walletDetails?.tonWalletAddress || '',
-        comment: walletDetails?.tonWalletComment || ''
+        comment: ''
       });
       setErrors({});
       queryClient.invalidateQueries({ queryKey: ['/api/withdrawals'] });
@@ -377,16 +380,12 @@ export default function Wallet() {
                 <form onSubmit={handleSaveWallet} className="space-y-4">
                   {/* TON Section */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold">TON Wallet</Label>
+                    <Label className="text-sm font-semibold">Enter TON Wallet Address</Label>
                     <Input
-                      placeholder="TON Wallet Address"
+                      placeholder="Enter TON Wallet Address"
                       value={walletForm.tonWalletAddress}
                       onChange={(e) => updateWalletForm('tonWalletAddress', e.target.value)}
-                    />
-                    <Input
-                      placeholder="Optional comment"
-                      value={walletForm.tonWalletComment}
-                      onChange={(e) => updateWalletForm('tonWalletComment', e.target.value)}
+                      required
                     />
                   </div>
 
