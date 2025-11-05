@@ -10,12 +10,14 @@ import Landing from "@/pages/Landing";
 import Admin from "@/pages/Admin";
 import Wallet from "@/pages/Wallet";
 import Affiliates from "@/pages/Affiliates";
+import CreateTask from "@/pages/CreateTask";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/tasks" component={Tasks} />
+      <Route path="/create-task" component={CreateTask} />
       <Route path="/wallet" component={Wallet} />
       <Route path="/affiliates" component={Affiliates} />
       <Route path="/profile" component={Landing} />
