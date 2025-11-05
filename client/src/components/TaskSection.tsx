@@ -61,6 +61,12 @@ export default function TaskSection() {
     setTelegramInitData(initData);
   }, []);
 
+  // Fetch app settings for daily ad limit
+  const { data: appSettings } = useQuery<{ dailyAdLimit: number }>({
+    queryKey: ['/api/app-settings'],
+    retry: false,
+  });
+
   // Fetch daily tasks using new API
   const { data: tasksResponse, isLoading: tasksLoading, refetch } = useQuery<TasksResponse>({
     queryKey: ['/api/tasks/daily'],
@@ -229,7 +235,7 @@ export default function TaskSection() {
               <span className="font-medium text-sm">Ads Watched Today</span>
             </div>
             <Badge variant="secondary" className="text-base px-2.5 py-0.5">
-              {adsWatchedToday}/160
+              {adsWatchedToday}/{appSettings?.dailyAdLimit || 50}
             </Badge>
           </div>
         </CardContent>
