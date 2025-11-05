@@ -95,129 +95,88 @@ export default function AdminPage() {
 
   return (
     <Layout>
-      <main className="max-w-7xl mx-auto px-4 pb-20 pt-6">
+      <main className="max-w-md mx-auto px-4 pb-20 pt-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2 truncate">
-            <Crown className="w-6 h-6 text-orange-600" />
-            Admin Dashboard
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+            <Crown className="w-5 h-5 text-purple-400" />
+            Admin
           </h1>
           <Button 
             size="sm"
             variant="outline"
             onClick={() => {
               queryClient.invalidateQueries();
-              toast({ title: "✅ Data refreshed successfully" });
+              toast({ title: "✅ Refreshed" });
             }}
-            className="h-9 px-4"
+            className="h-8 px-3 text-xs bg-purple-900/30 border-purple-500/30"
           >
-            <i className="fas fa-sync-alt mr-2"></i>
+            <i className="fas fa-sync-alt mr-1"></i>
             Refresh
           </Button>
         </div>
 
-        {/* App Dashboard - Vertical Layout */}
-        <div className="space-y-4 mb-6">
-          <h2 className="text-lg font-semibold text-foreground">App Dashboard</h2>
-          
-          {/* User Stats */}
-          <div className="grid grid-cols-2 gap-3">
-            <StatCard
-              icon="users"
-              label="Total Users"
-              value={stats?.totalUsers?.toLocaleString() || '0'}
-              iconColor="text-blue-600"
-              bgColor="bg-blue-50"
-            />
-            <StatCard
-              icon="user-check"
-              label="Active Users"
-              value={stats?.dailyActiveUsers?.toLocaleString() || '0'}
-              iconColor="text-green-600"
-              bgColor="bg-green-50"
-            />
-          </div>
+        {/* App Dashboard - Compact */}
+        <div className="space-y-3 mb-4">
+          <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border border-purple-500/20 rounded-xl p-3">
+            <h2 className="text-sm font-semibold text-white mb-3">Quick Stats</h2>
+            
+            {/* User & Ad Stats */}
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="bg-black/20 rounded-lg p-2">
+                <div className="text-xs text-gray-400">Users</div>
+                <div className="text-lg font-bold text-white">{stats?.totalUsers?.toLocaleString() || '0'}</div>
+              </div>
+              <div className="bg-black/20 rounded-lg p-2">
+                <div className="text-xs text-gray-400">Active</div>
+                <div className="text-lg font-bold text-white">{stats?.dailyActiveUsers?.toLocaleString() || '0'}</div>
+              </div>
+            </div>
 
-          {/* Ad Stats */}
-          <div className="grid grid-cols-2 gap-3">
-            <StatCard
-              icon="play-circle"
-              label="Total Ads"
-              value={stats?.totalAdsWatched?.toLocaleString() || '0'}
-              iconColor="text-purple-600"
-              bgColor="bg-purple-50"
-            />
-            <StatCard
-              icon="calendar-day"
-              label="Today Ads"
-              value={stats?.todayAdsWatched?.toLocaleString() || '0'}
-              iconColor="text-orange-600"
-              bgColor="bg-orange-50"
-            />
-          </div>
+            {/* Balance Stats */}
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="bg-black/20 rounded-lg p-2">
+                <div className="text-xs text-gray-400">Total MGB</div>
+                <div className="text-sm font-bold text-purple-300">{formatCurrency(stats?.totalEarnings || '0')}</div>
+              </div>
+              <div className="bg-black/20 rounded-lg p-2">
+                <div className="text-xs text-gray-400">TON Out</div>
+                <div className="text-sm font-bold text-blue-300">{formatCurrency(stats?.tonWithdrawn || '0')}</div>
+              </div>
+            </div>
 
-          {/* Balance Stats */}
-          <div className="grid grid-cols-1 gap-3">
-            <StatCard
-              icon="gem"
-              label="Total MGB"
-              value={formatCurrency(stats?.totalEarnings || '0')}
-              iconColor="text-cyan-600"
-              bgColor="bg-cyan-50"
-            />
-            <StatCard
-              icon="wallet"
-              label="TON Withdrawn"
-              value={formatCurrency(stats?.tonWithdrawn || '0')}
-              iconColor="text-indigo-600"
-              bgColor="bg-indigo-50"
-            />
-          </div>
-
-          {/* Withdrawal Requests */}
-          <h3 className="text-sm font-medium text-muted-foreground mt-4">Total Requests</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <StatCard
-              icon="clock"
-              label="Pending"
-              value={stats?.pendingWithdrawals?.toString() || '0'}
-              iconColor="text-yellow-600"
-              bgColor="bg-yellow-50"
-            />
-            <StatCard
-              icon="check-circle"
-              label="Approved"
-              value={stats?.successfulWithdrawals?.toString() || '0'}
-              iconColor="text-green-600"
-              bgColor="bg-green-50"
-            />
-            <StatCard
-              icon="times-circle"
-              label="Rejected"
-              value={stats?.rejectedWithdrawals?.toString() || '0'}
-              iconColor="text-red-600"
-              bgColor="bg-red-50"
-            />
+            {/* Withdrawal Stats */}
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-black/20 rounded-lg p-2 text-center">
+                <div className="text-xs text-yellow-400">⏳ {stats?.pendingWithdrawals || 0}</div>
+              </div>
+              <div className="bg-black/20 rounded-lg p-2 text-center">
+                <div className="text-xs text-green-400">✅ {stats?.successfulWithdrawals || 0}</div>
+              </div>
+              <div className="bg-black/20 rounded-lg p-2 text-center">
+                <div className="text-xs text-red-400">❌ {stats?.rejectedWithdrawals || 0}</div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Tabs Navigation */}
         <Tabs defaultValue="analytics" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full max-w-3xl mx-auto mb-6">
-            <TabsTrigger value="analytics">
-              <i className="fas fa-chart-line mr-2"></i>
-              Analytics
+          <TabsList className="grid grid-cols-4 w-full mb-4 bg-purple-900/20 border border-purple-500/20">
+            <TabsTrigger value="analytics" className="text-xs data-[state=active]:bg-purple-600/30 data-[state=active]:text-purple-200">
+              <i className="fas fa-chart-line mr-1"></i>
+              Stats
             </TabsTrigger>
-            <TabsTrigger value="promos">
-              <i className="fas fa-gift mr-2"></i>
+            <TabsTrigger value="promos" className="text-xs data-[state=active]:bg-purple-600/30 data-[state=active]:text-purple-200">
+              <i className="fas fa-gift mr-1"></i>
               Promos
             </TabsTrigger>
-            <TabsTrigger value="payouts">
-              <i className="fas fa-money-check-alt mr-2"></i>
+            <TabsTrigger value="payouts" className="text-xs data-[state=active]:bg-purple-600/30 data-[state=active]:text-purple-200">
+              <i className="fas fa-money-check-alt mr-1"></i>
               Payouts
             </TabsTrigger>
-            <TabsTrigger value="settings">
-              <i className="fas fa-cog mr-2"></i>
+            <TabsTrigger value="settings" className="text-xs data-[state=active]:bg-purple-600/30 data-[state=active]:text-purple-200">
+              <i className="fas fa-cog mr-1"></i>
               Settings
             </TabsTrigger>
           </TabsList>
@@ -248,25 +207,6 @@ export default function AdminPage() {
 }
 
 // Compact Stat Card Component
-function StatCard({ icon, label, value, iconColor, bgColor }: {
-  icon: string;
-  label: string;
-  value: string;
-  iconColor: string;
-  bgColor: string;
-}) {
-  return (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <i className={`fas fa-${icon} ${iconColor} text-xl`}></i>
-        </div>
-        <div className="text-2xl font-bold text-foreground mb-1">{value}</div>
-        <div className="text-xs text-muted-foreground">{label}</div>
-      </CardContent>
-    </Card>
-  );
-}
 
 // Analytics Section with Live Charts
 function AnalyticsSection({ stats }: { stats: AdminStats | undefined }) {
@@ -290,12 +230,12 @@ function AnalyticsSection({ stats }: { stats: AdminStats | undefined }) {
   const chartData = generateTrendData();
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center">
-            <i className="fas fa-chart-area mr-2 text-blue-600"></i>
-            Platform Trends
+          <CardTitle className="flex items-center text-base text-white">
+            <i className="fas fa-chart-area mr-2 text-purple-400"></i>
+            Trends
           </CardTitle>
           <div className="flex gap-2">
             {(['day', 'week', 'month'] as const).map((filter) => (
@@ -312,8 +252,8 @@ function AnalyticsSection({ stats }: { stats: AdminStats | undefined }) {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="h-80 w-full">
+      <CardContent className="pt-2">
+        <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -460,7 +400,7 @@ function PromoCreatorSection() {
   const [formData, setFormData] = useState({
     code: '',
     rewardAmount: '',
-    rewardType: 'TON' as 'TON',
+    rewardType: 'TON' as const,
     usageLimit: '',
     perUserLimit: '1',
     expiresAt: ''
@@ -570,13 +510,13 @@ function PromoCreatorSection() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className="space-y-3">
       {/* Create Promo Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <i className="fas fa-plus-circle mr-2 text-green-600"></i>
-            Create Promo Code
+      <Card className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center text-base text-white">
+            <i className="fas fa-plus-circle mr-2 text-purple-400"></i>
+            Create Promo
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -653,11 +593,11 @@ function PromoCreatorSection() {
       </Card>
 
       {/* Active Promos Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <i className="fas fa-list mr-2 text-blue-600"></i>
-            Active Promo Codes ({promoCodes.length})
+      <Card className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center text-base text-white">
+            <i className="fas fa-list mr-2 text-purple-400"></i>
+            Active Promos ({promoCodes.length})
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -758,12 +698,12 @@ function PayoutLogsSection({ data }: { data: any }) {
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20">
+      <CardHeader className="pb-3">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <CardTitle className="flex items-center">
-            <i className="fas fa-file-invoice-dollar mr-2 text-green-600"></i>
-            Payout Logs
+          <CardTitle className="flex items-center text-base text-white">
+            <i className="fas fa-file-invoice-dollar mr-2 text-purple-400"></i>
+            Payouts
           </CardTitle>
           <div className="flex flex-wrap gap-2">
             {(['all', 'pending', 'approved', 'rejected'] as const).map((filter) => (
@@ -862,7 +802,6 @@ function SettingsSection() {
   const [settings, setSettings] = useState({
     dailyAdLimit: '50',
     rewardPerAd: '1000',
-    affiliateCommission: '10',
     minimumWithdrawal: '0.5',
     taskPerClickReward: '0.0001750',
     taskCreationCost: '0.0003'
@@ -874,7 +813,6 @@ function SettingsSection() {
       setSettings({
         dailyAdLimit: settingsData.dailyAdLimit?.toString() || '50',
         rewardPerAd: settingsData.rewardPerAd?.toString() || '1000',
-        affiliateCommission: settingsData.affiliateCommission?.toString() || '10',
         minimumWithdrawal: settingsData.minimumWithdrawal?.toString() || '0.5',
         taskPerClickReward: settingsData.taskPerClickReward?.toString() || '0.0001750',
         taskCreationCost: settingsData.taskCreationCost?.toString() || '0.0003'
@@ -885,7 +823,6 @@ function SettingsSection() {
   const handleSaveSettings = async () => {
     const adLimit = parseInt(settings.dailyAdLimit);
     const reward = parseInt(settings.rewardPerAd);
-    const affiliate = parseFloat(settings.affiliateCommission);
     const minWithdrawal = parseFloat(settings.minimumWithdrawal);
     const taskReward = parseFloat(settings.taskPerClickReward);
     const taskCost = parseFloat(settings.taskCreationCost);
@@ -913,7 +850,6 @@ function SettingsSection() {
       const response = await apiRequest('PUT', '/api/admin/settings', {
         dailyAdLimit: adLimit,
         rewardPerAd: reward,
-        affiliateCommission: affiliate,
         minimumWithdrawal: minWithdrawal,
         taskPerClickReward: taskReward,
         taskCreationCost: taskCost
@@ -944,24 +880,24 @@ function SettingsSection() {
   
   if (isLoading) {
     return (
-      <Card>
+      <Card className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20">
         <CardContent className="py-8 text-center">
-          <i className="fas fa-spinner fa-spin text-3xl text-primary mb-2"></i>
-          <p className="text-muted-foreground">Loading settings...</p>
+          <i className="fas fa-spinner fa-spin text-3xl text-purple-400 mb-2"></i>
+          <p className="text-gray-400">Loading...</p>
         </CardContent>
       </Card>
     );
   }
   
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <i className="fas fa-cog mr-2 text-blue-600"></i>
-          App Settings
+    <Card className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/20">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center text-base text-white">
+          <i className="fas fa-cog mr-2 text-purple-400"></i>
+          Settings
         </CardTitle>
-        <p className="text-sm text-muted-foreground mt-2">
-          Configure app-wide settings for ad limits and reward amounts
+        <p className="text-xs text-gray-400 mt-1">
+          Configure app-wide settings
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -1009,31 +945,6 @@ function SettingsSection() {
             />
             <p className="text-xs text-muted-foreground">
               Current: {settingsData?.rewardPerAd || 1000} MGB per ad
-            </p>
-          </div>
-
-          {/* Affiliate Commission Setting */}
-          <div className="space-y-2">
-            <Label htmlFor="affiliate-commission" className="text-base font-semibold">
-              <i className="fas fa-users mr-2 text-green-600"></i>
-              Affiliate Commission (%)
-            </Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Percentage of earnings given to referrers
-            </p>
-            <Input
-              id="affiliate-commission"
-              type="number"
-              value={settings.affiliateCommission}
-              onChange={(e) => setSettings({ ...settings, affiliateCommission: e.target.value })}
-              placeholder="10"
-              min="0"
-              max="100"
-              step="0.1"
-              className="text-lg font-semibold"
-            />
-            <p className="text-xs text-muted-foreground">
-              Current: {settingsData?.affiliateCommission || 10}%
             </p>
           </div>
 

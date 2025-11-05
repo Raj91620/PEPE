@@ -78,9 +78,6 @@ export default function CreateTask() {
   const [additionalClicks, setAdditionalClicks] = useState("500");
   const [isAddClicksDialogOpen, setIsAddClicksDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
-  const [showVerifyInfo, setShowVerifyInfo] = useState(false);
 
   const { data: appSettings } = useQuery<any>({
     queryKey: ['/api/app-settings'],
@@ -111,14 +108,12 @@ export default function CreateTask() {
   const totalCostTON = costPerClick * clicksNum;
   const totalRewardsPAD = rewardPerClickPAD * clicksNum;
   const tonBalance = parseFloat((user as any)?.tonBalance || "0");
-  const pdzBalance = parseFloat((user as any)?.pdzBalance || "0");
   const additionalCostTON = costPerClick * (parseInt(additionalClicks) || 0);
   
-  // Determine payment method based on user type
-  const paymentCurrency = isAdmin ? "TON" : "PDZ";
-  // PDZ uses same cost as TON (1 PDZ = 1 TON for task creation pricing)
+  // All users use TON balance for task creation
+  const paymentCurrency = "TON";
   const totalCost = totalCostTON;
-  const availableBalance = isAdmin ? tonBalance : pdzBalance;
+  const availableBalance = tonBalance;
   const hasSufficientBalance = availableBalance >= totalCost;
 
   const { data: myTasksData, isLoading: myTasksLoading, refetch: refetchMyTasks } = useQuery<{
@@ -160,7 +155,6 @@ export default function CreateTask() {
       setLink("");
       setTotalClicks("500");
       setTaskType("channel");
-      setIsVerified(false);
       setActiveTab("my-task");
     },
     onError: (error: Error) => {
@@ -213,32 +207,6 @@ export default function CreateTask() {
     },
   });
 
-  const handleVerifyChannel = async () => {
-    if (!link.trim()) {
-      showNotification("Please enter a channel link first", "error");
-      return;
-    }
-
-    setIsVerifying(true);
-    try {
-      const response = await apiRequest("POST", "/api/advertiser-tasks/verify-channel", {
-        channelLink: link
-      });
-      const data = await response.json();
-      
-      if (data.success) {
-        setIsVerified(true);
-        showNotification("Channel verified successfully!", "success");
-      } else {
-        showNotification(data.message || "Verification failed", "error");
-      }
-    } catch (error) {
-      showNotification("Failed to verify channel", "error");
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
   const handleCreateTask = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -287,8 +255,8 @@ export default function CreateTask() {
     }
 
     const additionalCost = additionalCostTON;
-    const balance = isAdmin ? tonBalance : pdzBalance;
-    const currency = isAdmin ? "TON" : "PDZ";
+    const balance = tonBalance;
+    const currency = "TON";
 
     if (balance < additionalCost) {
       showNotification(`Insufficient ${currency} balance`, "error");
@@ -320,14 +288,22 @@ export default function CreateTask() {
   return (
     <Layout>
       <main ref={mainRef} className="max-w-md mx-auto px-4 mt-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <PlusCircle className="w-6 h-6 text-primary" />
-            Create Task
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Promote your channel or bot
-          </p>
+        <div className="mb-6 flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <PlusCircle className="w-6 h-6 text-primary" />
+              Create Task
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Promote your channel or bot
+            </p>
+          </div>
+          <div className="text-right">
+            <div className="text-xs text-muted-foreground">Balance</div>
+            <div className="text-lg font-bold text-primary">
+              {tonBalance.toFixed(4)} TON
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-6">
@@ -370,10 +346,7 @@ export default function CreateTask() {
                       ? "bg-blue-500/20 border-blue-500 text-blue-400 hover:bg-blue-500/30" 
                       : "hover:bg-blue-500/10 hover:border-blue-500/50"
                   }`}
-                  onClick={() => {
-                    setTaskType("channel");
-                    setIsVerified(false);
-                  }}
+                  onClick={() => setTaskType("channel")}
                 >
                   <Radio className="w-4 h-4" />
                   <span className="font-semibold text-sm">Channel</span>
@@ -416,56 +389,11 @@ export default function CreateTask() {
                     type="text"
                     placeholder={taskType === "channel" ? "https://t.me/yourchannel" : "https://t.me/yourbot"}
                     value={link}
-                    onChange={(e) => {
-                      setLink(e.target.value);
-                      setIsVerified(false);
-                    }}
+                    onChange={(e) => setLink(e.target.value)}
                     className="mt-1"
                   />
                 </div>
 
-                {taskType === "channel" && (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handleVerifyChannel}
-                        disabled={isVerifying || !link.trim()}
-                        className={`flex-1 ${
-                          isVerified 
-                            ? 'border-green-500 bg-green-500/10 text-green-500' 
-                            : link.trim() && (link.startsWith('http') || link.includes('t.me/'))
-                            ? 'border-blue-500 bg-blue-500/10 text-blue-500'
-                            : ''
-                        }`}
-                      >
-                        {isVerifying ? (
-                          <>
-                            <div className="animate-spin mr-2">⏳</div>
-                            Verifying...
-                          </>
-                        ) : isVerified ? (
-                          <>
-                            <CheckCircle2 className="w-4 h-4 mr-2" />
-                            Verified
-                          </>
-                        ) : (
-                          "Verify Channel"
-                        )}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setShowVerifyInfo(true)}
-                        className="text-muted-foreground hover:text-white"
-                      >
-                        <Info className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
 
                 <div>
                   <Label htmlFor="clicks">Total Clicks Required</Label>
@@ -488,7 +416,7 @@ export default function CreateTask() {
                 <Button
                   type="submit"
                   className="w-full btn-primary"
-                  disabled={createTaskMutation.isPending || !hasSufficientBalance || (taskType === "channel" && !isVerified)}
+                  disabled={createTaskMutation.isPending || !hasSufficientBalance}
                 >
                   {createTaskMutation.isPending ? "Publishing..." : `Pay ${totalCost.toFixed(4)} ${paymentCurrency} & Publish`}
                 </Button>

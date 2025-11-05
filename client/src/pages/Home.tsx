@@ -179,25 +179,25 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        {/* Network Chat Section */}
-        <Card className="mt-3 bg-gradient-to-br from-blue-900/40 to-purple-900/40 border-purple-500/30 rounded-xl shadow-lg">
-          <CardContent className="p-4">
+        {/* Developer Section */}
+        <Card className="mt-3 bg-black border-gray-800 rounded-xl">
+          <CardContent className="p-3">
             <div className="text-center">
-              <h3 className="text-base font-semibold text-white mb-2">
-                Network with other members in our chat room
+              <h3 className="text-sm font-semibold text-white mb-2">
+                Developer
               </h3>
               <Button
                 onClick={() => {
                   if (window.Telegram?.WebApp?.openTelegramLink) {
-                    window.Telegram.WebApp.openTelegramLink('https://t.me/PaidAdsCommunity');
+                    window.Telegram.WebApp.openTelegramLink('https://t.me/szxzyz');
                   } else {
-                    window.open('https://t.me/PaidAdsCommunity', '_blank');
+                    window.open('https://t.me/szxzyz', '_blank');
                   }
                 }}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg border border-gray-700"
               >
-                <i className="fas fa-comments mr-2"></i>
-                Go to chat
+                <i className="fas fa-user mr-2"></i>
+                Contact
               </Button>
             </div>
           </CardContent>
