@@ -1000,7 +1000,7 @@ function SettingsSection() {
               className="text-lg font-semibold"
             />
             <p className="text-xs text-muted-foreground">
-              Current: {settingsData?.taskPerClickReward || 1750} MGB
+              Current: {settingsData?.taskPerClickReward ? Math.round(settingsData.taskPerClickReward * MGB_TO_TON) : 875} MGB
             </p>
           </div>
 

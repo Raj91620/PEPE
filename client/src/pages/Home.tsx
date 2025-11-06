@@ -10,6 +10,7 @@ import PromoCodeInput from "@/components/PromoCodeInput";
 import { PlusCircle } from "lucide-react";
 import { useLocation, Link } from "wouter";
 import { useAdmin } from "@/hooks/useAdmin";
+import { MGB_TO_TON } from "@shared/constants";
 
 // Type definition for user object
 interface User {
@@ -130,7 +131,7 @@ export default function Home() {
               <div className="text-center">
                 <div className="text-gray-400 text-xs font-medium">Balance</div>
                 <div className="text-2xl font-bold text-white">
-                  {Math.round(parseFloat((user as User)?.balance || "0") * 10000000)} MGB
+                  {Math.round(parseFloat((user as User)?.balance || "0") * MGB_TO_TON)} MGB
                 </div>
               </div>
             </div>
