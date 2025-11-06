@@ -70,7 +70,7 @@ export default function Affiliates() {
   // Share referral link via Telegram
   const shareViaWebApp = () => {
     if (referralLink && window.Telegram?.WebApp?.openTelegramLink) {
-      const shareText = `Earn PAD in Telegram!`;
+      const shareText = `Earn MGB in Telegram!`;
       window.Telegram.WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`);
     } else {
       copyReferralLink();
@@ -162,13 +162,13 @@ export default function Affiliates() {
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground">Level 1 Income</span>
                   <span className="text-base font-semibold text-primary">
-                    {Math.round(parseFloat(stats?.level1Earnings || '0') * 100000)} PAD
+                    {Math.round(parseFloat(stats?.level1Earnings || '0') * 10000000).toLocaleString()} MGB
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground">Level 2 Income</span>
                   <span className="text-base font-semibold text-primary">
-                    {Math.round(parseFloat(stats?.level2Earnings || '0') * 100000)} PAD
+                    {Math.round(parseFloat(stats?.level2Earnings || '0') * 10000000).toLocaleString()} MGB
                   </span>
                 </div>
               </div>

@@ -73,9 +73,9 @@ export default function CreateTask() {
   const [taskType, setTaskType] = useState<"channel" | "bot" | null>(null);
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
-  const [totalClicks, setTotalClicks] = useState("500");
+  const [totalClicks, setTotalClicks] = useState("100");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [additionalClicks, setAdditionalClicks] = useState("500");
+  const [additionalClicks, setAdditionalClicks] = useState("100");
   const [isAddClicksDialogOpen, setIsAddClicksDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
   const [showVerifyInfo, setShowVerifyInfo] = useState(false);
@@ -154,7 +154,7 @@ export default function CreateTask() {
       
       setTitle("");
       setLink("");
-      setTotalClicks("500");
+      setTotalClicks("100");
       setTaskType("channel");
       setActiveTab("my-task");
     },
@@ -180,7 +180,7 @@ export default function CreateTask() {
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       setIsAddClicksDialogOpen(false);
       setSelectedTask(null);
-      setAdditionalClicks("500");
+      setAdditionalClicks("100");
     },
     onError: (error: Error) => {
       showNotification(error.message || "Failed to add clicks", "error");
@@ -233,8 +233,8 @@ export default function CreateTask() {
       return;
     }
 
-    if (clicksNum < 500) {
-      showNotification("Minimum 500 clicks required", "error");
+    if (clicksNum < 100) {
+      showNotification("Minimum 100 clicks required", "error");
       return;
     }
 
@@ -250,8 +250,8 @@ export default function CreateTask() {
     if (!selectedTask) return;
 
     const clicks = parseInt(additionalClicks);
-    if (clicks < 500) {
-      showNotification("Minimum 500 additional clicks required", "error");
+    if (clicks < 100) {
+      showNotification("Minimum 100 additional clicks required", "error");
       return;
     }
 
@@ -400,15 +400,15 @@ export default function CreateTask() {
                   <Input
                     id="clicks"
                     type="number"
-                    min="500"
+                    min="100"
                     step="100"
-                    placeholder="500"
+                    placeholder="100"
                     value={totalClicks}
                     onChange={(e) => setTotalClicks(e.target.value)}
                     className="mt-1"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    Minimum 500 clicks
+                    Minimum 100 clicks
                   </p>
                 </div>
 
@@ -510,7 +510,7 @@ export default function CreateTask() {
                                 }}
                               >
                                 <TrendingUp className="w-3 h-3 mr-2" />
-                                Add More Clicks (min +500)
+                                Add More Clicks (min +100)
                               </Button>
                             </CardContent>
                           </Card>
@@ -578,14 +578,14 @@ export default function CreateTask() {
                   <Input
                     id="additional-clicks"
                     type="number"
-                    min="500"
+                    min="100"
                     step="100"
                     value={additionalClicks}
                     onChange={(e) => setAdditionalClicks(e.target.value)}
                     className="mt-1"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    Minimum 500 clicks
+                    Minimum 100 clicks
                   </p>
                 </div>
               </div>
@@ -605,7 +605,7 @@ export default function CreateTask() {
                 onClick={() => {
                   setIsAddClicksDialogOpen(false);
                   setSelectedTask(null);
-                  setAdditionalClicks("500");
+                  setAdditionalClicks("100");
                 }}
               >
                 Cancel

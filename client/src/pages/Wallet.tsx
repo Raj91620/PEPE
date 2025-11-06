@@ -227,7 +227,40 @@ export default function Wallet() {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
     },
     onError: (error: any) => {
-      showNotification(error.message || "Withdrawal failed", "error");
+      // Clean up error messages - extract user-friendly text from JSON or raw messages
+      let errorMessage = "Withdrawal failed";
+      
+      if (error.message) {
+        const msg = error.message.toLowerCase();
+        
+        // Check for common error patterns
+        if (msg.includes('insufficient') || msg.includes('not enough')) {
+          errorMessage = "Insufficient MGB";
+        } else if (msg.includes('pending')) {
+          errorMessage = "You already have a pending withdrawal";
+        } else if (msg.includes('minimum')) {
+          errorMessage = "Amount is below minimum withdrawal";
+        } else if (msg.includes('wallet') || msg.includes('address')) {
+          errorMessage = "Invalid wallet address";
+        } else if (msg.includes('referral') || msg.includes('friend')) {
+          errorMessage = "Minimum friend invite requirement not met";
+        } else {
+          // Try to extract clean message from JSON format
+          try {
+            const jsonMatch = error.message.match(/\{.*"message"\s*:\s*"([^"]*)"/);
+            if (jsonMatch && jsonMatch[1]) {
+              errorMessage = jsonMatch[1];
+            } else {
+              // Use the original message if it's not JSON
+              errorMessage = error.message.replace(/^\{.*\}$/, error.message);
+            }
+          } catch {
+            errorMessage = error.message;
+          }
+        }
+      }
+      
+      showNotification(errorMessage, "error");
     },
   });
 
