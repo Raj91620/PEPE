@@ -544,7 +544,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Add referral link with fallback bot username
-      const botUsername = process.env.BOT_USERNAME || "LightningSatsbot";
+      const botUsername = process.env.BOT_USERNAME || "ManiGainBot";
       const referralLink = `https://t.me/${botUsername}?start=${user.referralCode}`;
       
       res.json({
