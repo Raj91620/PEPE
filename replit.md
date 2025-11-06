@@ -4,7 +4,27 @@ CashWatch is a React-based web application designed for users to earn cryptocurr
 
 # Recent Changes (November 6, 2025)
 
-## Home Page UI Update (Latest)
+## Bug Fixes and Configuration Updates (Latest - GitHub Import Completed)
+- **Fixed MGB to TON Conversion Rate**: Corrected conversion rate from 10,000,000 to 5,000,000 throughout the entire codebase
+  - Updated `formatCurrency` function in `client/utils.ts`
+  - Fixed admin settings GET/PUT endpoints in `server/routes.ts`
+  - Updated app-settings endpoint defaults
+  - Fixed database migration in `server/migrate.ts`
+  - Fixed withdrawal endpoint minimum withdrawal default
+- **Updated Default Reward Values**:
+  - Task completion reward: Changed from 1750 MGB to 100 MGB (0.00002 TON)
+  - Ad watch reward: Changed from 1000 MGB to 50 MGB
+  - Minimum withdrawal: Changed from 0.5 TON to 0.1 TON (500,000 MGB)
+  - Default withdrawal currency: Changed from TON to MGB
+- **Made Task Click Minimum Configurable**: Removed hardcoded 500 clicks, now configurable via admin settings with default of 100 clicks
+- **Fixed MGB Withdrawal Validation**: Updated minimum withdrawal default in POST /api/withdrawals endpoint to correctly use 0.1 TON (500,000 MGB)
+- **Project Setup**: 
+  - Configured development workflow on port 5000 with webview
+  - Verified database connection and migrations
+  - All dependencies installed and server running successfully
+  - Database schema migrated with correct defaults
+
+## Home Page UI Update
 - **Removed Income Statistics Section**: Removed the income statistics widget (Today's earnings, All time, On referrals) from the home page
 - **Added Balance Card**: Added a new balance display card showing:
   - Username/Telegram ID and UID in the top left
