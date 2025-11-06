@@ -37,7 +37,7 @@ export default function AdWatchingSection({ user }: AdWatchingSectionProps) {
       
       // Calculate MGB amount from response (convert TON to MGB)
       // The reward amount comes from the backend based on admin settings
-      const mgbAmount = Math.round(parseFloat(data.earning?.amount || '0') * 10000000);
+      const mgbAmount = Math.round(parseFloat(data.earning?.amount || '0') * 5000000);
       
       // Show reward notification with dynamic amount
       showNotification(`You received ${mgbAmount.toLocaleString()} MGB on your balance`, "success");

@@ -56,10 +56,10 @@ export default function WalletSection({ padBalance, uid, isAdmin, onAdminClick, 
   });
 
   const handleConvert = () => {
-    const minimumConvertPAD = appSettings?.minimumConvertPAD || 100000;
+    const minimumConvertMGB = appSettings?.minimumConvertMGB || 100000;
     
-    if (padBalance < minimumConvertPAD) {
-      showNotification(`Minimum ${minimumConvertPAD.toLocaleString()} MGB required.`, "error");
+    if (padBalance < minimumConvertMGB) {
+      showNotification(`Minimum ${minimumConvertMGB.toLocaleString()} MGB required.`, "error");
       return;
     }
 
