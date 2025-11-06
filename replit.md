@@ -39,13 +39,13 @@ Preferred communication style: Simple, everyday language.
 *   **Key Entities**: Users (balance, streaks, referrals), Earnings, Withdrawals, Referral relationships, Sessions, Advertiser Tasks, Task Clicks.
 
 ## Business Logic
-*   **Ad Watching System**: Users earn PAD per ad with cooldowns and minimum watch time.
+*   **Ad Watching System**: Users earn PAD per ad with cooldowns and minimum watch time. Rewards dynamically pulled from admin settings; notifications display actual MGB amount earned. Backend increments adsWatched and adsWatchedToday counters, synchronized with frontend stats.
 *   **Gamification**: Spin & Win system and Daily Streak rewards.
 *   **Referral Program**: Multi-level commission on referred users' ad earnings.
 *   **Withdrawal System**: MGB-based withdrawals (1 TON = 10,000,000 MGB internally), minimum friend invite requirement, admin approval, TON wallet address validation (UQ/EQ prefix, 48 characters).
 *   **Currency System**: Earnings and tasks displayed as PAD (1 TON = 100,000 PAD internally). Withdrawals are exclusively in MGB. Internal database storage uses TON for precision.
 *   **Admin Controls**: Comprehensive settings for affiliate commission, wallet change fees, minimum withdrawal, task rewards, task creation cost, balance conversion, and broadcast functionality.
-*   **Task System**: Users can create tasks (e.g., join Telegram channels) with title validation and auto-link correction.
+*   **Task System**: Users can create tasks (e.g., join Telegram channels) with strict Telegram link validation (only https://t.me/ or t.me/ links allowed). Invalid links are rejected before TON/PDZ deduction to prevent user balance loss.
 
 # External Dependencies
 
