@@ -4,6 +4,28 @@ CashWatch is a React-based web application designed for users to earn cryptocurr
 
 # Recent Changes (November 6, 2025)
 
+## Home Page UI Update (Latest)
+- **Removed Income Statistics Section**: Removed the income statistics widget (Today's earnings, All time, On referrals) from the home page
+- **Added Balance Card**: Added a new balance display card showing:
+  - Username/Telegram ID and UID in the top left
+  - Admin Dashboard button in the top right (only visible for admins using environment variables)
+  - Centered MGB balance display
+- **Combined Layout**: Balance card and Today's activity are now in a single card with no gap between them
+  - Separated by a subtle border for visual organization
+  - Matches the clean, cohesive design of the previous income statistics section
+- **Preserved Today's Activity**: Tasks completed and Ads watched counts remain functional
+- **Removed unused API call**: Eliminated /api/user/stats endpoint call from Home.tsx
+
+## Admin Dashboard Visibility Fix
+- **Removed all hardcoded admin IDs** from the entire codebase
+- Fixed admin dashboard visibility to use environment variables exclusively:
+  - `server/routes.ts`: Promo code creation now checks `TELEGRAM_ADMIN_ID` or `ADMIN_ID` environment variable
+  - `server/storage.ts`: Admin user setup now uses environment variable with graceful fallback
+  - `storage.ts`: Admin user setup now uses environment variable with graceful fallback
+- Admin access now dynamically determined by `TELEGRAM_ADMIN_ID` or `ADMIN_ID` environment variable
+- **No code redeployment needed** when changing admin ID - just update the environment variable
+- Frontend admin check uses `VITE_ADMIN_ID` environment variable (must match backend)
+
 ## Telegram Bot Admin Panel Updates
 - Updated welcome message for admin users to show "⚙️ Admin Control Panel" instead of regular welcome message
 - Replaced multiple inline buttons with 3 clean admin buttons:
