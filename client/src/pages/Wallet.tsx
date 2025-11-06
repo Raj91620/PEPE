@@ -180,7 +180,8 @@ export default function Wallet() {
 
   const validateWithdrawForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-    const amountTON = parseFloat(withdrawForm.amount);
+    const amountMGB = parseFloat(withdrawForm.amount);
+    const balanceMGB = Math.round(parseFloat(user?.balance || '0') * 10000000);
 
     // Check for pending withdrawal
     if (hasPendingWithdrawal) {
@@ -188,14 +189,14 @@ export default function Wallet() {
       return false;
     }
 
-    if (!withdrawForm.amount || amountTON <= 0) {
+    if (!withdrawForm.amount || amountMGB <= 0) {
       newErrors.amount = 'Please enter a valid amount';
-    } else if (amountTON > parseFloat(user?.balance || '0')) {
+    } else if (amountMGB > balanceMGB) {
       newErrors.amount = 'Insufficient balance';
     }
 
     if (!withdrawForm.paymentDetails.trim()) {
-      showNotification("Please set up your TON wallet address first", "error");
+      showNotification("Please set up your MGB wallet address first", "error");
       return false;
     }
 
@@ -341,10 +342,7 @@ export default function Wallet() {
             <div className="text-center">
               <div className="text-primary-foreground/80 text-xs font-medium">Balance</div>
               <div className="text-2xl font-bold text-white">
-                {Math.round(parseFloat(user?.balance || "0") * 500000)} MGB
-              </div>
-              <div className="text-primary-foreground/70 text-xs">
-                ≈ {(parseFloat(user?.balance || "0")).toFixed(4)} TON
+                {Math.round(parseFloat(user?.balance || "0") * 10000000)} MGB
               </div>
             </div>
           </div>
@@ -375,11 +373,11 @@ export default function Wallet() {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSaveWallet} className="space-y-4">
-                  {/* TON Section */}
+                  {/* MGB Section */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold">Enter TON Wallet Address</Label>
+                    <Label className="text-sm font-semibold">Enter MGB Wallet Address</Label>
                     <Input
-                      placeholder="Enter TON Wallet Address"
+                      placeholder="Enter MGB Wallet Address"
                       value={walletForm.tonWalletAddress}
                       onChange={(e) => updateWalletForm('tonWalletAddress', e.target.value)}
                       required
@@ -414,7 +412,7 @@ export default function Wallet() {
             <Card className="neon-glow-border shadow-lg">
               <CardHeader className="py-3">
                 <CardTitle className="text-base font-medium">Withdraw funds</CardTitle>
-                <CardDescription className="text-xs">Enter amount to withdraw to your TON wallet</CardDescription>
+                <CardDescription className="text-xs">Enter amount to withdraw to your MGB wallet</CardDescription>
               </CardHeader>
               
               <CardContent className="p-4 pt-2">
@@ -426,12 +424,12 @@ export default function Wallet() {
                       <Input
                         id="withdraw-amount"
                         type="number"
-                        step="0.00001"
+                        step="1"
                         min="0"
-                        max={autoRoundAmount(user?.balance || "0")}
+                        max={Math.round(parseFloat(user?.balance || "0") * 10000000)}
                         value={withdrawForm.amount}
                         onChange={(e) => updateWithdrawForm('amount', e.target.value)}
-                        placeholder="0.00"
+                        placeholder="0"
                         className={`text-lg h-12 pr-16 ${errors.amount ? 'border-red-500' : ''}`}
                       />
                       <Button 
@@ -439,17 +437,16 @@ export default function Wallet() {
                         size="sm"
                         variant="ghost"
                         className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 text-xs font-semibold"
-                        onClick={() => updateWithdrawForm('amount', autoRoundAmount(user?.balance || '0'))}
+                        onClick={() => updateWithdrawForm('amount', String(Math.round(parseFloat(user?.balance || '0') * 10000000)))}
                       >
                         MAX
                       </Button>
                     </div>
                     {errors.amount && <p className="text-sm text-red-500">{errors.amount}</p>}
                     
-                    {/* Balance preview with TON conversion */}
+                    {/* Balance preview */}
                     <div className="text-xs text-muted-foreground space-y-1">
-                      <div>Balance: {Math.round(parseFloat(user?.balance || "0") * 500000)} MGB ≈ {(parseFloat(user?.balance || "0")).toFixed(4)} TON</div>
-                      <div className="text-[11px]">Conversion: 500,000 MGB = 1 TON</div>
+                      <div>Balance: {Math.round(parseFloat(user?.balance || "0") * 10000000)} MGB</div>
                     </div>
                   </div>
 
@@ -525,7 +522,7 @@ export default function Wallet() {
                             }`}></div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between gap-2">
-                                <span className="font-semibold text-sm text-foreground">{Math.round(parseFloat(withdrawal.amount) * 100000)} MGB</span>
+                                <span className="font-semibold text-sm text-foreground">{Math.round(parseFloat(withdrawal.amount) * 10000000)} MGB</span>
                                 <span className={`text-xs font-medium ${getStatusTextColor(withdrawal.status)}`}>
                                   {getStatusLabel(withdrawal.status)}
                                 </span>

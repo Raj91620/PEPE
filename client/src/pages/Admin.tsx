@@ -140,7 +140,7 @@ export default function AdminPage() {
                 <div className="text-sm font-bold text-purple-300">{formatCurrency(stats?.totalEarnings || '0')}</div>
               </div>
               <div className="bg-black/20 rounded-lg p-2">
-                <div className="text-xs text-gray-400">TON Out</div>
+                <div className="text-xs text-gray-400">MGB Out</div>
                 <div className="text-sm font-bold text-blue-300">{formatCurrency(stats?.tonWithdrawn || '0')}</div>
               </div>
             </div>
@@ -291,7 +291,7 @@ function AnalyticsSection({ stats }: { stats: AdminStats | undefined }) {
                 dataKey="withdrawals" 
                 stroke="#ef4444" 
                 strokeWidth={2}
-                name="📉 TON Withdrawn"
+                name="📉 MGB Withdrawn"
                 dot={{ fill: '#ef4444', r: 3 }}
                 activeDot={{ r: 5 }}
               />
