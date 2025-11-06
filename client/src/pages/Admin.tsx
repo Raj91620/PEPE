@@ -802,7 +802,7 @@ function SettingsSection() {
   const [settings, setSettings] = useState({
     dailyAdLimit: '50',
     rewardPerAd: '1000',
-    minimumWithdrawal: '0.5',
+    minimumWithdrawal: '2500000',
     taskPerClickReward: '0.0001750',
     taskCreationCost: '0.0003'
   });
@@ -810,10 +810,15 @@ function SettingsSection() {
   // Update form when settings data loads
   useEffect(() => {
     if (settingsData) {
+      // Convert minimum withdrawal from TON to MGB for display (TON * 5,000,000)
+      const minWithdrawalMGB = settingsData.minimumWithdrawal 
+        ? Math.round(settingsData.minimumWithdrawal * 5000000)
+        : 2500000;
+      
       setSettings({
         dailyAdLimit: settingsData.dailyAdLimit?.toString() || '50',
         rewardPerAd: settingsData.rewardPerAd?.toString() || '1000',
-        minimumWithdrawal: settingsData.minimumWithdrawal?.toString() || '0.5',
+        minimumWithdrawal: minWithdrawalMGB.toString(),
         taskPerClickReward: settingsData.taskPerClickReward?.toString() || '0.0001750',
         taskCreationCost: settingsData.taskCreationCost?.toString() || '0.0003'
       });
@@ -823,7 +828,7 @@ function SettingsSection() {
   const handleSaveSettings = async () => {
     const adLimit = parseInt(settings.dailyAdLimit);
     const reward = parseInt(settings.rewardPerAd);
-    const minWithdrawal = parseFloat(settings.minimumWithdrawal);
+    const minWithdrawalMGB = parseInt(settings.minimumWithdrawal);
     const taskReward = parseFloat(settings.taskPerClickReward);
     const taskCost = parseFloat(settings.taskCreationCost);
     
@@ -845,12 +850,15 @@ function SettingsSection() {
       return;
     }
     
+    // Convert minimum withdrawal from MGB to TON for backend (MGB / 5,000,000)
+    const minWithdrawalTON = minWithdrawalMGB / 5000000;
+    
     setIsSaving(true);
     try {
       const response = await apiRequest('PUT', '/api/admin/settings', {
         dailyAdLimit: adLimit,
         rewardPerAd: reward,
-        minimumWithdrawal: minWithdrawal,
+        minimumWithdrawal: minWithdrawalTON,
         taskPerClickReward: taskReward,
         taskCreationCost: taskCost
       });
@@ -952,7 +960,7 @@ function SettingsSection() {
           <div className="space-y-2">
             <Label htmlFor="minimum-withdrawal" className="text-base font-semibold">
               <i className="fas fa-money-bill-wave mr-2 text-blue-600"></i>
-              Minimum Withdrawal (TON)
+              Minimum Withdrawal (MGB)
             </Label>
             <p className="text-xs text-muted-foreground mb-2">
               Minimum amount required to withdraw
@@ -962,13 +970,13 @@ function SettingsSection() {
               type="number"
               value={settings.minimumWithdrawal}
               onChange={(e) => setSettings({ ...settings, minimumWithdrawal: e.target.value })}
-              placeholder="0.5"
+              placeholder="2500000"
               min="0"
-              step="0.01"
+              step="100000"
               className="text-lg font-semibold"
             />
             <p className="text-xs text-muted-foreground">
-              Current: {settingsData?.minimumWithdrawal || 0.5} TON
+              Current: {settingsData?.minimumWithdrawal ? Math.round(settingsData.minimumWithdrawal * 5000000).toLocaleString() : '2,500,000'} MGB
             </p>
           </div>
 
