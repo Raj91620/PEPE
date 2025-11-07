@@ -1,7 +1,7 @@
 // Telegram Bot API integration for sending notifications
 import TelegramBot from 'node-telegram-bot-api';
 import { storage } from './storage';
-import { MGB_TO_TON } from '../shared/constants';
+import { MGB_TO_TON, tonToMGB } from '../shared/constants';
 
 const isAdmin = (telegramId: string): boolean => {
   const adminId = process.env.ADMIN_ID || process.env.TELEGRAM_ADMIN_ID;
@@ -635,11 +635,11 @@ export async function handleTelegramMessage(update: any): Promise<boolean> {
             if (user && user.telegram_id) {
               const withdrawalDetails = result.withdrawal.details as any;
               const amount = result.withdrawal.amount;
-              const amountMGB = Math.round(parseFloat(amount) * 10000000);
+              const amountMGB = tonToMGB(parseFloat(amount));
               const walletAddress = withdrawalDetails?.paymentDetails || 'N/A';
               
               // Send user notification - new format
-              const userMessage = `✅ Your withdrawal of ${amountMGB} MGB has been completed successfully.\n🏦 Address: ${walletAddress}\n💸 Thank you for using our service!`;
+              const userMessage = `✅ Your withdrawal of ${amountMGB.toLocaleString()} MGB has been completed successfully.\n🏦 Address: ${walletAddress}\n💸 Thank you for using our service!`;
               
               await sendUserTelegramNotification(user.telegram_id, userMessage);
             }
@@ -647,7 +647,7 @@ export async function handleTelegramMessage(update: any): Promise<boolean> {
             // Update admin message with formatted success details
             const withdrawalDetails = result.withdrawal.details as any;
             const amount = result.withdrawal.amount;
-            const amountMGB = Math.round(parseFloat(amount) * 10000000);
+            const amountMGB = tonToMGB(parseFloat(amount));
             const walletAddress = withdrawalDetails?.paymentDetails || 'N/A';
             const userName = user?.firstName || user?.username || 'Unknown';
             const userId = user?.id || 'N/A';

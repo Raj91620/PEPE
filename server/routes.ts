@@ -1912,13 +1912,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       };
       
-      // Convert PAD values to TON before saving (divide by 10,000,000)
+      // Convert MGB values to TON before saving (divide by MGB_TO_TON = 500,000)
       // Use explicit null/undefined checks to allow legitimate zero values
       const taskPerClickRewardTON = (taskPerClickReward !== null && taskPerClickReward !== undefined) 
-        ? (taskPerClickReward / 10000000).toFixed(8) 
+        ? (taskPerClickReward / MGB_TO_TON).toFixed(8) 
         : null;
       const walletChangeFeeTON = (walletChangeFee !== null && walletChangeFee !== undefined)
-        ? (walletChangeFee / 10000000).toFixed(8) 
+        ? (walletChangeFee / MGB_TO_TON).toFixed(8) 
         : null;
       
       // Update all provided settings
