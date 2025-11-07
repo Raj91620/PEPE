@@ -2415,16 +2415,13 @@ export class DatabaseStorage implements IStorage {
       }
     }
 
-    // Validate reward amount before processing
-    const rewardAmountTON = task.rewardAmount;
-    const rewardAmountNum = parseFloat(rewardAmountTON);
+    // ✅ ALWAYS use FIXED 200 MGB reward (ignore database value to ensure consistency)
+    // This ensures old tasks with wrong rewards still give 200 MGB
+    const FIXED_REWARD_TON = (TASK_FIXED_REWARD_MGB / MGB_TO_TON).toFixed(8);
+    const rewardAmountTON = FIXED_REWARD_TON;
+    const rewardAmountNum = TASK_FIXED_REWARD_MGB;
     
-    if (isNaN(rewardAmountNum) || rewardAmountNum <= 0) {
-      console.error('❌ Invalid reward amount for task:', { taskLevel, rewardAmount: rewardAmountTON });
-      return { success: false, message: "Invalid task reward amount" };
-    }
-    
-    console.log(`💰 Claiming task ${taskLevel} reward: ${rewardAmountTON} TON (${Math.round(rewardAmountNum * MGB_TO_TON)} MGB)`);
+    console.log(`💰 Claiming task ${taskLevel} reward: FIXED ${TASK_FIXED_REWARD_MGB} MGB (${rewardAmountTON} TON)`);
 
     // Mark task as claimed
     await db
@@ -2455,7 +2452,7 @@ export class DatabaseStorage implements IStorage {
       type: 'addition',
       source: 'task_completion',
       description: `Task ${taskLevel} reward`,
-      metadata: { taskLevel, required: task.required, resetDate, rewardMGB: Math.round(rewardAmountNum * MGB_TO_TON) }
+      metadata: { taskLevel, required: task.required, resetDate, rewardMGB: TASK_FIXED_REWARD_MGB }
     });
 
     console.log(`✅ Task ${taskLevel} reward claimed successfully for user ${userId}`);
@@ -2682,9 +2679,10 @@ export class DatabaseStorage implements IStorage {
         }
       }
 
-      // Fetch dynamic task reward from admin settings
-      const taskRewardSetting = await db.select().from(adminSettings).where(eq(adminSettings.settingKey, 'task_per_click_reward')).limit(1);
-      const rewardAmount = taskRewardSetting[0]?.settingValue || "0.0001750";
+      // ✅ FIXED REWARD: Always give 200 MGB per task completion (ignore admin settings)
+      // Convert 200 MGB to TON for internal storage (200 / 500,000 = 0.0004 TON)
+      const rewardAmount = (TASK_FIXED_REWARD_MGB / MGB_TO_TON).toFixed(8);
+      console.log(`💰 Advertiser task reward: FIXED ${TASK_FIXED_REWARD_MGB} MGB (${rewardAmount} TON)`);
 
       // Record the click
       await db.insert(taskClicks).values({

@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage, TASK_FIXED_REWARD_MGB } from "./storage";
 import { WebSocketServer, WebSocket } from 'ws';
 import { 
   insertEarningSchema, 
@@ -2379,8 +2379,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      const rewardAmount = promotion.rewardPerUser || '0.00025';
-      console.log(`🔍 Promotion details:`, { rewardPerUser: promotion.rewardPerUser, type: promotion.type, id: promotion.id });
+      // ✅ FIXED REWARD: Always use 200 MGB for all task completions (channel, bot, etc)
+      // Convert 200 MGB to TON (200 / 500,000 = 0.0004 TON)
+      const rewardAmount = (TASK_FIXED_REWARD_MGB / MGB_TO_TON).toFixed(8);
+      console.log(`🔍 Promotion details (FIXED REWARD):`, { fixedReward: `${TASK_FIXED_REWARD_MGB} MGB`, rewardTON: rewardAmount, type: promotion.type, id: promotion.id });
       
       // Determine if this is a daily task (new task types that reset daily)
       const isDailyTask = [
