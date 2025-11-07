@@ -803,7 +803,6 @@ function SettingsSection() {
     dailyAdLimit: '50',
     rewardPerAd: '1000',
     minimumWithdrawal: '2500000',
-    taskPerClickReward: '0.0001750',
     taskCreationCost: '0.0003'
   });
   
@@ -819,7 +818,6 @@ function SettingsSection() {
         dailyAdLimit: settingsData.dailyAdLimit?.toString() || '50',
         rewardPerAd: settingsData.rewardPerAd?.toString() || '100',
         minimumWithdrawal: minWithdrawalMGB.toString(),
-        taskPerClickReward: settingsData.taskPerClickReward?.toString() || '0.0001750',
         taskCreationCost: settingsData.taskCreationCost?.toString() || '0.0003'
       });
     }
@@ -829,7 +827,6 @@ function SettingsSection() {
     const adLimit = parseInt(settings.dailyAdLimit);
     const reward = parseInt(settings.rewardPerAd);
     const minWithdrawalMGB = parseInt(settings.minimumWithdrawal);
-    const taskReward = parseFloat(settings.taskPerClickReward);
     const taskCost = parseFloat(settings.taskCreationCost);
     
     if (isNaN(adLimit) || adLimit <= 0) {
@@ -859,7 +856,6 @@ function SettingsSection() {
         dailyAdLimit: adLimit,
         rewardPerAd: reward,
         minimumWithdrawal: minWithdrawalTON,
-        taskPerClickReward: taskReward,
         taskCreationCost: taskCost
       });
       
@@ -977,30 +973,6 @@ function SettingsSection() {
             />
             <p className="text-xs text-muted-foreground">
               Current: {settingsData?.minimumWithdrawal ? Math.round(settingsData.minimumWithdrawal * MGB_TO_TON).toLocaleString() : '50,000'} MGB
-            </p>
-          </div>
-
-          {/* Task Per Click Reward Setting */}
-          <div className="space-y-2">
-            <Label htmlFor="task-per-click-reward" className="text-base font-semibold">
-              <i className="fas fa-mouse-pointer mr-2 text-purple-600"></i>
-              Task Per Click Reward (MGB)
-            </Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Reward per task completion
-            </p>
-            <Input
-              id="task-per-click-reward"
-              type="number"
-              value={settings.taskPerClickReward}
-              onChange={(e) => setSettings({ ...settings, taskPerClickReward: e.target.value })}
-              placeholder="1750"
-              min="0"
-              step="1"
-              className="text-lg font-semibold"
-            />
-            <p className="text-xs text-muted-foreground">
-              Current: {settingsData?.taskPerClickReward ? Math.round(settingsData.taskPerClickReward * MGB_TO_TON) : 875} MGB
             </p>
           </div>
 
