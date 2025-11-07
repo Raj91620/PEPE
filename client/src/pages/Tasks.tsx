@@ -76,8 +76,7 @@ export default function Tasks() {
       return data;
     },
     onSuccess: (data, taskId) => {
-      const padReward = Math.floor(parseFloat(data.reward) * 10000000);
-      showNotification(`You earned ${padReward.toLocaleString()} MGB!`, "success");
+      showNotification("You earned +200 MGB", "success");
       queryClient.invalidateQueries({ queryKey: ["/api/advertiser-tasks"] });
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       setClickedTasks(prev => {
