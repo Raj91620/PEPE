@@ -14,6 +14,7 @@ import { formatCurrency } from '@/lib/utils';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Link } from 'wouter';
 import { PAYMENT_SYSTEMS, type PaymentSystem } from '@/constants/paymentSystems';
+import { MGB_TO_TON } from '@shared/constants';
 
 interface WithdrawalRequest {
   id: string;
@@ -181,7 +182,7 @@ export default function Wallet() {
   const validateWithdrawForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     const amountMGB = parseFloat(withdrawForm.amount);
-    const balanceMGB = Math.round(parseFloat(user?.balance || '0') * 10000000);
+    const balanceMGB = Math.round(parseFloat(user?.balance || '0') * MGB_TO_TON);
 
     // Check for pending withdrawal
     if (hasPendingWithdrawal) {
@@ -375,7 +376,7 @@ export default function Wallet() {
             <div className="text-center">
               <div className="text-primary-foreground/80 text-xs font-medium">Balance</div>
               <div className="text-2xl font-bold text-white">
-                {Math.round(parseFloat(user?.balance || "0") * 10000000)} MGB
+                {Math.round(parseFloat(user?.balance || "0") * MGB_TO_TON)} MGB
               </div>
             </div>
           </div>
@@ -459,7 +460,7 @@ export default function Wallet() {
                         type="number"
                         step="1"
                         min="0"
-                        max={Math.round(parseFloat(user?.balance || "0") * 10000000)}
+                        max={Math.round(parseFloat(user?.balance || "0") * MGB_TO_TON)}
                         value={withdrawForm.amount}
                         onChange={(e) => updateWithdrawForm('amount', e.target.value)}
                         placeholder="0"
@@ -470,7 +471,7 @@ export default function Wallet() {
                         size="sm"
                         variant="ghost"
                         className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 text-xs font-semibold"
-                        onClick={() => updateWithdrawForm('amount', String(Math.round(parseFloat(user?.balance || '0') * 10000000)))}
+                        onClick={() => updateWithdrawForm('amount', String(Math.round(parseFloat(user?.balance || '0') * MGB_TO_TON)))}
                       >
                         MAX
                       </Button>
@@ -479,7 +480,7 @@ export default function Wallet() {
                     
                     {/* Balance preview */}
                     <div className="text-xs text-muted-foreground space-y-1">
-                      <div>Balance: {Math.round(parseFloat(user?.balance || "0") * 10000000)} MGB</div>
+                      <div>Balance: {Math.round(parseFloat(user?.balance || "0") * MGB_TO_TON)} MGB</div>
                     </div>
                   </div>
 
@@ -555,7 +556,7 @@ export default function Wallet() {
                             }`}></div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between gap-2">
-                                <span className="font-semibold text-sm text-foreground">{Math.round(parseFloat(withdrawal.amount) * 10000000)} MGB</span>
+                                <span className="font-semibold text-sm text-foreground">{Math.round(parseFloat(withdrawal.amount) * MGB_TO_TON)} MGB</span>
                                 <span className={`text-xs font-medium ${getStatusTextColor(withdrawal.status)}`}>
                                   {getStatusLabel(withdrawal.status)}
                                 </span>
