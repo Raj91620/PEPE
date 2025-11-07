@@ -40,6 +40,11 @@ Preferred communication style: Simple, everyday language.
 *   **Ad Watching System**: Users earn MGB per ad with cooldowns and minimum watch time. Rewards are dynamically configured via admin settings.
 *   **Gamification**: Includes a Spin & Win system and Daily Streak rewards.
 *   **Referral Program**: Multi-level commission on referred users' ad earnings.
+   - Users can apply referral codes via both Telegram bot (`/start REFCODE`) and web app (`POST /api/referrals/apply`)
+   - When a new user signs up with a referral code, the referrer's `friendsInvited` count is instantly incremented
+   - Real-time WebSocket notifications update referral counts and commission earnings without page reload
+   - Referrers earn 10% commission on their referred users' ad watching earnings (stored as pending bonus)
+   - Commission system prevents self-referrals through device ID matching and same-user detection
 *   **Withdrawal System**: MGB-based withdrawals (1 TON = 5,000,000 MGB internally), requiring a minimum number of friend invites and admin approval. TON wallet address validation is performed (UQ/EQ prefix, 48 characters).
 *   **Currency System**: Earnings and tasks are displayed as PAD (1 TON = 100,000 PAD internally). Withdrawals are processed in MGB. Internal database storage uses TON for precision, with automatic conversion to/from MGB in the UI. All task types now provide a fixed reward of 200 MGB.
 *   **Admin Controls**: Comprehensive settings for affiliate commission, wallet change fees, minimum withdrawal, task rewards, task creation cost, balance conversion, and broadcast functionality.
