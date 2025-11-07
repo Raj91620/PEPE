@@ -117,6 +117,17 @@ export function useWebSocket() {
               showNotification("Referral bonus!", "success", parseFloat(message.amount || '0'));
               break;
               
+            case 'referral_income':
+              // New instant referral income notification
+              if (message.data?.message) {
+                showNotification(message.data.message, "success");
+              }
+              // Invalidate queries to update balance and referral stats
+              queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+              queryClient.invalidateQueries({ queryKey: ['/api/user/stats'] });
+              queryClient.invalidateQueries({ queryKey: ['/api/referrals/stats'] });
+              break;
+              
             case 'balance_update':
               showNotification("Balance updated!", "success", parseFloat((message as any).delta || message.amount || '0'));
               break;
