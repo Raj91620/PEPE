@@ -64,10 +64,10 @@ export default function Affiliates() {
 
   const inviteFriend = () => {
     if (referralLink && window.Telegram?.WebApp?.switchInlineQuery) {
-      const shareText = `Earn PAD in Telegram!\n${referralLink}`;
+      const shareText = `Earn MGB in Telegram!\n${referralLink}`;
       window.Telegram.WebApp.switchInlineQuery(shareText, ['users']);
     } else if (window.Telegram?.WebApp?.openTelegramLink) {
-      const shareText = `Earn PAD in Telegram!`;
+      const shareText = `Earn MGB in Telegram!`;
       window.Telegram.WebApp.openTelegramLink(
         `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}&disable_web_page_preview=true`
       );
@@ -76,7 +76,7 @@ export default function Affiliates() {
     }
   };
 
-  const totalEarned = Math.round(parseFloat(stats?.level1Earnings || '0') * 100000);
+  const totalEarned = Math.round(parseFloat(stats?.level1Earnings || '0') * 500000);
 
   if (isLoading) {
     return (
@@ -98,19 +98,19 @@ export default function Affiliates() {
       <main className="max-w-md mx-auto px-4 pb-24 pt-6">
         <div className="text-center mb-4">
           <h1 className="text-2xl font-bold text-foreground mb-2">Invite Friends!</h1>
-          <p className="text-sm text-muted-foreground">You earn 10% from referrals</p>
+          <p className="text-sm text-muted-foreground">Invite friends and earn 10% MGB from their ad income!</p>
         </div>
 
         <Card className="mb-4 neon-glow-border">
           <CardContent className="pt-4 pb-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-xs text-muted-foreground mb-1">Total Referrals</div>
+                <div className="text-xs text-muted-foreground mb-1">Friends Invited</div>
                 <div className="text-2xl font-bold text-foreground">{stats?.referralCount || 0}</div>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-1">Referral Income</div>
-                <div className="text-2xl font-bold text-foreground">{totalEarned.toLocaleString()} PAD</div>
+                <div className="text-2xl font-bold text-foreground">{totalEarned.toLocaleString()} MGB</div>
               </div>
             </div>
           </CardContent>
@@ -151,12 +151,12 @@ export default function Affiliates() {
                   const friendName = referral.referredUser?.firstName || 
                                     referral.referredUser?.username || 
                                     'User';
-                  const padEarned = Math.round(parseFloat(referral.referredUser?.totalEarned || '0') * 100000 * 0.1);
+                  const mgbEarned = Math.round(parseFloat(referral.referredUser?.totalEarned || '0') * 500000 * 0.1);
                   
                   return (
                     <div key={referral.id} className="flex justify-between items-center py-2 border-b border-border last:border-0">
                       <span className="text-foreground">{friendName}</span>
-                      <span className="text-muted-foreground text-sm">PAD earned: {padEarned.toLocaleString()}</span>
+                      <span className="text-muted-foreground text-sm">MGB earned: {mgbEarned.toLocaleString()}</span>
                     </div>
                   );
                 })}
