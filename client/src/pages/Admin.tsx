@@ -282,7 +282,7 @@ function AnalyticsSection({ stats }: { stats: AdminStats | undefined }) {
                 dataKey="earnings" 
                 stroke="#10b981" 
                 strokeWidth={2}
-                name="📈 MGB Earned"
+                name="📈 PEPE Earned"
                 dot={{ fill: '#10b981', r: 3 }}
                 activeDot={{ r: 5 }}
               />
@@ -291,7 +291,7 @@ function AnalyticsSection({ stats }: { stats: AdminStats | undefined }) {
                 dataKey="withdrawals" 
                 stroke="#ef4444" 
                 strokeWidth={2}
-                name="📉 MGB Withdrawn"
+                name="📉 PEPE Withdrawn"
                 dot={{ fill: '#ef4444', r: 3 }}
                 activeDot={{ r: 5 }}
               />
@@ -400,7 +400,7 @@ function PromoCreatorSection() {
   const [formData, setFormData] = useState({
     code: '',
     rewardAmount: '',
-    rewardType: 'TON' as const,
+    rewardType: 'PEPE' as const,
     usageLimit: '',
     perUserLimit: '1',
     expiresAt: ''
@@ -466,7 +466,7 @@ function PromoCreatorSection() {
         setFormData({
           code: '',
           rewardAmount: '',
-          rewardType: 'TON',
+          rewardType: 'PEPE',
           usageLimit: '',
           perUserLimit: '1',
           expiresAt: ''
@@ -802,7 +802,7 @@ function SettingsSection() {
   const [settings, setSettings] = useState({
     dailyAdLimit: '50',
     rewardPerAd: '1000',
-    minimumWithdrawal: '2500000',
+    minimumWithdrawal: '25000',
     taskCreationCost: '0.0003'
   });
   
