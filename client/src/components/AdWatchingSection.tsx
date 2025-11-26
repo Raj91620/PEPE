@@ -8,7 +8,7 @@ import { MGB_TO_TON } from "@shared/constants";
 
 declare global {
   interface Window {
-    show_9368336: (type?: string | { type: string; inAppSettings: any }) => Promise<void>;
+    show_10218639: (type?: string | { type: string; inAppSettings: any }) => Promise<void>;
   }
 }
 
@@ -72,9 +72,9 @@ export default function AdWatchingSection({ user }: AdWatchingSectionProps) {
           return; // Block early popup
         }
         
-        if (typeof window.show_9368336 === 'function') {
+        if (typeof window.show_10218639 === 'function') {
           try {
-            window.show_9368336();
+            window.show_10218639();
           } catch (error) {
             console.log('Auto ad display:', error);
           }
@@ -97,9 +97,9 @@ export default function AdWatchingSection({ user }: AdWatchingSectionProps) {
     setIsWatching(true);
     
     try {
-      if (typeof window.show_9368336 === 'function') {
+      if (typeof window.show_10218639 === 'function') {
         // Ad opens immediately
-        await window.show_9368336();
+        await window.show_10218639();
         // Process reward after ad is shown
         watchAdMutation.mutate('rewarded');
       } else {
