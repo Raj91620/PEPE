@@ -76,7 +76,7 @@ export default function Tasks() {
       return data;
     },
     onSuccess: (data, taskId) => {
-      showNotification("You earned +200 MGB", "success");
+      showNotification("You earned +10 PEPE", "success");
       queryClient.invalidateQueries({ queryKey: ["/api/advertiser-tasks"] });
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       setClickedTasks(prev => {
@@ -213,7 +213,7 @@ export default function Tasks() {
             Tasks
           </h1>
           <p className="text-sm text-muted-foreground">
-            Earn MGB by completing tasks
+            Earn PEPE by completing tasks
           </p>
         </div>
 
@@ -252,7 +252,7 @@ export default function Tasks() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-white font-medium text-xs truncate">{task.title}</h3>
-                          <p className="text-[#007BFF] text-xs font-bold">+{padReward.toLocaleString()} MGB</p>
+                          <p className="text-[#007BFF] text-xs font-bold">+{padReward.toLocaleString()} PEPE</p>
                         </div>
                       </div>
                       <Button
