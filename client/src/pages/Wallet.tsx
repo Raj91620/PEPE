@@ -376,7 +376,7 @@ export default function Wallet() {
             <div className="text-center">
               <div className="text-primary-foreground/80 text-xs font-medium">Balance</div>
               <div className="text-2xl font-bold text-white">
-                {Math.round(parseFloat(user?.balance || "0") * MGB_TO_TON)} MGB
+                {Math.round(parseFloat(user?.balance || "0") * MGB_TO_TON)} PEPE
               </div>
             </div>
           </div>
@@ -409,9 +409,9 @@ export default function Wallet() {
                 <form onSubmit={handleSaveWallet} className="space-y-4">
                   {/* MGB Section */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold">Enter MGB Wallet Address</Label>
+                    <Label className="text-sm font-semibold">Enter Binance ID Only</Label>
                     <Input
-                      placeholder="Enter MGB Wallet Address"
+                      placeholder="Enter Binance ID Only"
                       value={walletForm.tonWalletAddress}
                       onChange={(e) => updateWalletForm('tonWalletAddress', e.target.value)}
                       required
@@ -446,7 +446,7 @@ export default function Wallet() {
             <Card className="neon-glow-border shadow-lg">
               <CardHeader className="py-3">
                 <CardTitle className="text-base font-medium">Withdraw funds</CardTitle>
-                <CardDescription className="text-xs">Minimum 50,000 = 0.1 TON<br />500,000 = 1 TON</CardDescription>
+                <CardDescription className="text-xs">Minimum 3,000 <br />500,000 </CardDescription>
               </CardHeader>
               
               <CardContent className="p-4 pt-2">
@@ -480,7 +480,7 @@ export default function Wallet() {
                     
                     {/* Balance preview */}
                     <div className="text-xs text-muted-foreground space-y-1">
-                      <div>Available Balance: {Math.round(parseFloat(user?.balance || "0") * MGB_TO_TON)} MGB</div>
+                      <div>Available Balance: {Math.round(parseFloat(user?.balance || "0") * MGB_TO_TON)} PEPE</div>
                     </div>
                   </div>
 
