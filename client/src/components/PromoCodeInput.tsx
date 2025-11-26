@@ -9,7 +9,7 @@ import { Ticket } from "lucide-react";
 // Declare ad function for TypeScript
 declare global {
   interface Window {
-    show_10218641: (type?: string | { type: string; inAppSettings: any }) => Promise<void>;
+    show_10218639: (type?: string | { type: string; inAppSettings: any }) => Promise<void>;
   }
 }
 
@@ -30,10 +30,10 @@ export default function PromoCodeInput() {
       showNotification("Promo applied successfully!", "success");
       
       // FIX BUG #3: Show ad popup after successful promo code claim
-      if (data.showAd && typeof window !== 'undefined' && typeof window.show_10218641 === 'function') {
+      if (data.showAd && typeof window !== 'undefined' && typeof window.show_10218639 === 'function') {
         setTimeout(() => {
           try {
-            window.show_10218641();
+            window.show_10218639();
           } catch (error) {
             console.log('Failed to show ad after promo claim:', error);
           }
