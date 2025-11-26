@@ -131,7 +131,7 @@ export default function Home() {
               <div className="text-center">
                 <div className="text-gray-400 text-xs font-medium">Balance</div>
                 <div className="text-2xl font-bold text-white">
-                  {Math.round(parseFloat((user as User)?.balance || "0") * MGB_TO_TON)} MGB
+                  {Math.round(parseFloat((user as User)?.balance || "0") * MGB_TO_TON)} PEPE
                 </div>
               </div>
             </div>
@@ -191,9 +191,9 @@ export default function Home() {
               <Button
                 onClick={() => {
                   if (window.Telegram?.WebApp?.openTelegramLink) {
-                    window.Telegram.WebApp.openTelegramLink('https://t.me/szxzyz');
+                    window.Telegram.WebApp.openTelegramLink('https://t.me/Rajji999');
                   } else {
-                    window.open('https://t.me/szxzyz', '_blank');
+                    window.open('https://t.me/Rajji999', '_blank');
                   }
                 }}
                 className="w-full bg-gray-900 hover:bg-gray-800 text-white text-xs rounded-lg border border-gray-700 py-2"
